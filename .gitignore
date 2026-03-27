@@ -11,9 +11,10 @@ frontend/dist/
 frontend/.vscode/
 
 # Project Specific
-"Expected Images of Project/"
 Expected\ Images\ of\ Project/
+Expected Images of Project/
 backend/qr_codes/*.png
+backend/qr_codes/uuid_*.png
 backend/qr_codes/*.jpg
 .DS_Store
 
