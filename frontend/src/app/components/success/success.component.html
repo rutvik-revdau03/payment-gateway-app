@@ -1,0 +1,32 @@
+<div class="page-wrapper">
+  <mat-card class="main-card">
+
+    <mat-card-content>
+      <div class="success-body">
+
+        <div class="icon">🎉</div>
+        <h2>Payment Successful!</h2>
+        <p class="subtitle">
+          Your transaction has been completed and saved.<br>
+          A QR receipt was generated on the payment page.
+        </p>
+
+        <div class="info-box">
+          <p> Payment verified by Razorpay</p>
+          <p> Transaction saved to database</p>
+          <p> Live USD → INR rate applied</p>
+        </div>
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="home-btn"
+          (click)="newOrder()">
+           Place Another Order
+        </button>
+
+      </div>
+    </mat-card-content>
+
+  </mat-card>
+</div>

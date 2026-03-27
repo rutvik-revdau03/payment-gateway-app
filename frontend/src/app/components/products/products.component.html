@@ -1,0 +1,61 @@
+<div class="page-wrapper">
+  <mat-card class="main-card">
+
+    <mat-card-header>
+      <mat-card-title>🛒 Select Product</mat-card-title>
+      <!-- Live exchange rate badge -->
+      <span class="rate-badge">
+       {{ rateMessage }}
+      </span>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <!-- Loading spinner while products are fetching -->
+      <div *ngIf="loading" class="spinner-wrap">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Loading products...</p>
+      </div>
+
+      <div *ngIf="!loading">
+
+        <!-- Product Dropdown -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Product</mat-label>
+          <mat-select [(ngModel)]="selected">
+            <mat-option *ngFor="let p of products" [value]="p">
+              {{ p.name }} — ${{ p.price }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Quantity Input -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Quantity</mat-label>
+          <input matInput type="number" [(ngModel)]="quantity" min="1">
+        </mat-form-field>
+
+        <!-- Estimated INR total (live calculation) -->
+        <div class="estimate" *ngIf="selected && exchangeRate">
+          <p>
+            Estimated Total:
+            <strong>{{ estimatedInr }}</strong>
+            <span class="rate-note">(at live rate {{ rateMessage }})</span>
+          </p>
+        </div>
+
+        <!-- Next Button -->
+        <button
+          mat-raised-button
+          color="primary"
+          class="full-width action-btn"
+          (click)="proceed()"
+          [disabled]="!selected || quantity <= 0">
+          Next → Proceed to Payment
+        </button>
+
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,68 @@
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f4f6f9;
+  padding: 24px;
+}
+
+.main-card {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rate-badge {
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.estimate {
+  background: #fff8e1;
+  border-left: 4px solid #f9a825;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.estimate .rate-note {
+  color: #888;
+  font-size: 12px;
+  margin-left: 6px;
+}
+
+.action-btn {
+  margin-top: 8px;
+  height: 44px;
+  font-size: 15px;
+}
+
+.spinner-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px;
+  gap: 12px;
+  color: #888;
+}

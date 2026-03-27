@@ -1,0 +1,135 @@
+<div class="page-wrapper">
+  <mat-card class="main-card">
+
+    <mat-card-header>
+      <mat-card-title> Payment</mat-card-title>
+      <button mat-button color="primary" (click)="goBack()" class="back-btn">
+        ← Back
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <!-- ── Order Summary ──────────────────────────────────────── -->
+      <div class="order-summary" *ngIf="!result">
+        <div class="summary-row">
+          <span>Product</span>
+          <strong>{{ order.product?.name }}</strong>
+        </div>
+        <div class="summary-row">
+          <span>Quantity</span>
+          <strong>{{ order.quantity }}</strong>
+        </div>
+        <div class="summary-row">
+          <span>Price (USD)</span>
+          <strong>${{ order.product?.price }} × {{ order.quantity }}</strong>
+        </div>
+        <div class="summary-row highlight">
+          <span>Total (USD)</span>
+          <strong>${{ totalUsd }}</strong>
+        </div>
+        <div class="summary-row highlight-inr">
+          <span>Total (INR)</span>
+          <strong>
+            ₹{{ totalInr }}
+            <!-- FIXED: was showing "#64" — replaced &#64; with plain text "at" -->
+            <span class="rate-note" *ngIf="liveRate">at ₹{{ liveRate }}/USD</span>
+          </strong>
+        </div>
+      </div>
+
+      <!-- ── Payment Method ─────────────────────────────────────── -->
+      <mat-form-field appearance="outline" class="full-width" *ngIf="!result">
+        <mat-label>Payment Method</mat-label>
+        <mat-select [(ngModel)]="method">
+          <mat-option value="UPI">UPI</mat-option>
+          <mat-option value="Card">Credit / Debit Card</mat-option>
+          <mat-option value="NetBanking">Net Banking</mat-option>
+          <mat-option value="Wallet">Wallet</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- ── Pay Button ─────────────────────────────────────────── -->
+      <!-- FIXED: Button now shows correct states:
+           - "Pay ₹X via Razorpay"   → default, ready to pay
+           - "Creating order..."     → waiting for backend to create order
+           - "Processing payment..." → Razorpay popup is open
+           - "Verifying payment..."  → backend is verifying after popup closes
+      -->
+      <button
+        mat-raised-button
+        color="accent"
+        class="full-width pay-btn"
+        (click)="pay()"
+        *ngIf="!result"
+        [disabled]="loading || paymentInProgress">
+
+        <mat-spinner diameter="20" *ngIf="loading || paymentInProgress" class="btn-spinner"></mat-spinner>
+
+        <span *ngIf="!loading && !paymentInProgress">
+          Pay ₹{{ totalInr }} via Razorpay
+        </span>
+        <span *ngIf="loading && !paymentInProgress">
+          Creating order...
+        </span>
+        <span *ngIf="paymentInProgress">
+          Processing payment...
+        </span>
+      </button>
+
+      <!-- ── Live Rate Note ─────────────────────────────────────── -->
+      <p class="rate-info" *ngIf="liveRate && !result">
+       Live Rate: 1 USD = ₹{{ liveRate }} (powered by Frankfurter API)
+      </p>
+
+      <!-- ── Payment Receipt ────────────────────────────────────── -->
+      <div class="receipt" *ngIf="result">
+        <div class="receipt-header">
+          <span class="check"></span>
+          <h3>Payment Successful!</h3>
+        </div>
+
+        <div class="receipt-body">
+          <div class="receipt-row">
+            <span>Product</span>
+            <strong>{{ order.product?.name }}</strong>
+          </div>
+          <div class="receipt-row">
+            <span>Quantity</span>
+            <strong>{{ order.quantity }}</strong>
+          </div>
+          <div class="receipt-row">
+            <span>Paid (USD)</span>
+            <strong>${{ totalUsd }}</strong>
+          </div>
+          <div class="receipt-row">
+            <span>Paid (INR)</span>
+            <strong>₹{{ totalInr }}</strong>
+          </div>
+          <div class="receipt-row">
+            <span>Exchange Rate</span>
+            <strong>1 USD = ₹{{ liveRate }}</strong>
+          </div>
+          <div class="receipt-row">
+            <span>Payment ID</span>
+            <strong class="pay-id">{{ result.payment_id }}</strong>
+          </div>
+        </div>
+
+        <div class="qr-wrap" *ngIf="result.qr">
+          <p>📱 Scan QR for receipt</p>
+          <img [src]="'http://127.0.0.1:8000' + result.qr" width="180" alt="Payment QR">
+        </div>
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="full-width action-btn"
+          (click)="goSuccess()">
+           Finish
+        </button>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>
