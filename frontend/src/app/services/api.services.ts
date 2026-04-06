@@ -18,6 +18,11 @@ export class ApiService {
     return this.http.get(`${this.baseUrl}/products`);
   }
 
+  /** POST /products — add a new product to MySQL */
+  addProduct(data: { name: string; price: number }) {
+    return this.http.post(`${this.baseUrl}/products`, data);
+  }
+
   // ── Currency ────────────────────────────────────────────────────
 
   /** GET /exchange-rate — fetch live USD to INR rate from Frankfurter */
@@ -33,7 +38,7 @@ export class ApiService {
    * Backend converts USD → INR using live Frankfurter rate
    * Returns order_id, amount (paise), key, usd, inr, rate
    */
-  createOrder(data: { product: string; price: number; quantity: number; method: string }) {
+  createOrder(data: { product: string; price: number; quantity: number; method: string; user_id: number }) {
     return this.http.post(`${this.baseUrl}/payment/create-order`, data);
   }
 
@@ -53,12 +58,13 @@ export class ApiService {
     amount_inr: number;
     exchange_rate: number;
     method: string;
+    user_id: number;
   }) {
     return this.http.post(`${this.baseUrl}/payment/verify`, data);
   }
 
-  /** GET /transactions — fetch all past transactions (for history page) */
-  getTransactions() {
-    return this.http.get(`${this.baseUrl}/transactions`);
+  /** GET /transactions/{user_id} — fetch past transactions for current user */
+  getTransactions(userId: number) {
+    return this.http.get(`${this.baseUrl}/transactions/${userId}`);
   }
 }

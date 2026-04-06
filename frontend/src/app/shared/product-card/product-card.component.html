@@ -1,0 +1,36 @@
+<mat-card class="product-card surface">
+  <img *ngIf="product.image"
+       [src]="product.image"
+       alt="{{ product.name }} image"
+       class="thumb">
+
+  <mat-card-header>
+    <mat-card-title class="text-primary">{{ product.name }}</mat-card-title>
+    <mat-card-subtitle>USD ${{ product.price }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <p *ngIf="product.description">{{ product.description }}</p>
+
+    <!-- Quantity selector (simple) -->
+    <div class="qty-row">
+      <label for="qty-{{product.id}}">Qty</label>
+      <input id="qty-{{product.id}}"
+             type="number"
+             min="1"
+             [(ngModel)]="quantity"
+             (keydown.enter)="$event.preventDefault()">
+    </div>
+
+    <p class="total">Total: <strong>${{ totalUsd }}</strong></p>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-raised-button
+            color="primary"
+            class="hover-primary"
+            (click)="onAdd()">
+      Add {{ quantity }} to Cart
+    </button>
+  </mat-card-actions>
+</mat-card>

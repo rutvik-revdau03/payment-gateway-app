@@ -1,0 +1,178 @@
+<div class="landing-container">
+  <section class="hero-section">
+    <h1>Welcome to <span class="accent">ShopWave</span></h1>
+    <p>Your Ultimate E-commerce Destination</p>
+    
+    @if (!isLoggedIn()) {
+      <div class="auth-buttons">
+        <a routerLink="/login" mat-raised-button color="primary">Login</a>
+        <a routerLink="/signup" mat-stroked-button color="accent">Sign Up</a>
+      </div>
+    } @else {
+      <div class="user-welcome">
+        <h2>Hello, <span class="user-name">{{ getUserName() }}</span>!</h2>
+        <p>Explore our exclusive collection just for you.</p>
+      </div>
+    }
+  </section>
+
+  @if (isLoggedIn()) {
+    <section class="products-section">
+      <h2>Trending Collections</h2>
+      
+      <div *ngIf="loading" class="loading-wrap">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Curating your experience...</p>
+      </div>
+
+      <div *ngIf="!loading && products.length > 0">
+        <div class="row">
+          <!-- Main Product Loop -->
+          <ng-container *ngFor="let p of products; let i = index">
+            
+            <!-- Standard Card -->
+            <mat-card *ngIf="i !== 3" class="product-card" [style.animation-delay]="(i * 0.1) + 's'" style="animation: slideUp 0.6s ease-out forwards; opacity: 0;">
+              <mat-card-header>
+                <div mat-card-avatar class="product-icon-container">
+                  <mat-icon>{{ p.icon }}</mat-icon>
+                </div>
+                <mat-card-title>{{ p.name }}</mat-card-title>
+                <div class="price-tag">${{ p.price }}</div>
+              </mat-card-header>
+              <mat-card-content>
+                <p>{{ p.description }}</p>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-button color="primary" (click)="handleAction(p)">
+                  Add to Cart
+                  <mat-icon iconPositionEnd>shopping_cart</mat-icon>
+                </button>
+              </mat-card-actions>
+            </mat-card>
+
+            <!-- Featured Card (Always at index 3) -->
+            <mat-card *ngIf="i === 3" class="product-card large-card" style="animation: slideUp 0.8s ease-out forwards; opacity: 0;">
+              <div class="large-card-layout">
+                <div class="large-icon-section">
+                   <mat-icon class="huge-icon">{{ p.icon }}</mat-icon>
+                </div>
+                <div class="large-info-section">
+                  <mat-card-header>
+                    <mat-card-title>{{ p.name }}</mat-card-title>
+                    <div class="price-tag large-price">${{ p.price }}</div>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <p class="long-desc">{{ p.description }}</p>
+                    <p class="badge">🔥 Featured Item</p>
+                  </mat-card-content>
+                  <mat-card-actions>
+                    <button mat-raised-button color="warn" class="buy-now-btn" (click)="handleAction(p)">
+                      Buy Now - Special Deal
+                    </button>
+                  </mat-card-actions>
+                </div>
+              </div>
+            </mat-card>
+
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- New Section: More Products (Requested by user) -->
+      <div *ngIf="!loading && products.length > 5" class="more-products-wrapper fadeIn" style="margin-top: 6rem;">
+         <div class="section-title">
+            <h2>More products <span class="accent">you like</span></h2>
+            <p>Continue exploring our latest additions to the catalog.</p>
+         </div>
+
+         <div class="row">
+           <ng-container *ngFor="let p of products.slice(5); let i = index">
+              <mat-card class="product-card" [style.animation-delay]="(i * 0.1) + 's'">
+                <mat-card-header>
+                  <div mat-card-avatar class="product-icon-container">
+                    <mat-icon>{{ p.icon }}</mat-icon>
+                  </div>
+                  <mat-card-title>{{ p.name }}</mat-card-title>
+                  <div class="price-tag">${{ p.price }}</div>
+                </mat-card-header>
+                <mat-card-content>
+                  <p>{{ p.description }}</p>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button mat-button color="primary" (click)="handleAction(p)">
+                    Add to Cart
+                    <mat-icon iconPositionEnd>shopping_cart</mat-icon>
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+           </ng-container>
+         </div>
+      </div>
+    </section>
+  } @else {
+    <section class="guest-info-section page-wrapper">
+      <mat-card class="premium-card guest-card" style="animation: slideUp 0.8s ease-out forwards; opacity: 0;">
+        <div class="card-icon-box second pulse-animation">
+          <mat-icon>lock_person</mat-icon>
+        </div>
+        <mat-card-header>
+          <mat-card-title>Unlock Exclusive Collections</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Login to view our curated selection of premium products and seasonal deals. Experience the best of digital commerce today!</p>
+          <div class="auth-buttons" style="margin-top: 2rem;">
+            <button mat-raised-button color="primary" routerLink="/login" style="padding: 0 3rem;">Get Started</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </section>
+  }
+
+  <section class="ecommerce-info page-wrapper">
+    <div class="section-title">
+      <h2>Why Shop at <span class="accent">ShopWave?</span></h2>
+      <p>Redefining your digital shopping experience with world-class features.</p>
+    </div>
+    
+    <div class="grid-layout">
+      <!-- Security Feature -->
+      <mat-card class="premium-card small-card" style="animation: slideUp 0.6s ease-out forwards; opacity: 0;">
+        <div class="card-icon-box primary">
+          <mat-icon>security</mat-icon>
+        </div>
+        <mat-card-header>
+          <mat-card-title>Bank-Grade Security</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          Every transaction is protected by industry-standard encryption and signature verification.
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Shipping Feature -->
+      <mat-card class="premium-card small-card" style="animation: slideUp 0.8s ease-out forwards; opacity: 0; animation-delay: 0.1s;">
+        <div class="card-icon-box second">
+          <mat-icon>local_shipping</mat-icon>
+        </div>
+        <mat-card-header>
+          <mat-card-title>Global Express</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          Lightning fast international shipping with real-time tracking for every single order.
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Support Feature -->
+      <mat-card class="premium-card small-card" style="animation: slideUp 1s ease-out forwards; opacity: 0; animation-delay: 0.2s;">
+        <div class="card-icon-box accent">
+          <mat-icon>support_agent</mat-icon>
+        </div>
+        <mat-card-header>
+          <mat-card-title>24/7 Expert Help</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          Our dedicated support team is always available to assist you with any questions.
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+</div>

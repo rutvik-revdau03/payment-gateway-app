@@ -1,0 +1,45 @@
+<mat-toolbar color="primary" class="main-header">
+  <span class="logo" routerLink="/">
+    <mat-icon class="logo-icon">payments</mat-icon>
+    <span>ShopWave Gateway</span>
+  </span>
+
+  <span class="spacer"></span>
+
+  <div class="nav-links">
+    <button mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Products</button>
+    <button mat-button routerLink="/about" routerLinkActive="active">About</button>
+    <button mat-button routerLink="/contact" routerLinkActive="active">Contact</button>
+  </div>
+
+  <span class="spacer"></span>
+
+  <div class="user-actions">
+    <ng-container *ngIf="loggedInUser; else loginTpl">
+      <!-- Admin Icon (Visible only to admins) -->
+      <button mat-icon-button routerLink="/admin" matTooltip="Admin Panel" color="accent" *ngIf="isAdmin">
+        <mat-icon>admin_panel_settings</mat-icon>
+      </button>
+
+      <!-- Order History Icon -->
+      <button mat-icon-button routerLink="/history" matTooltip="Order History">
+        <mat-icon>history</mat-icon>
+      </button>
+
+      <!-- Cart Icon -->
+      <button mat-icon-button routerLink="/products" class="cart-btn" matTooltip="View Cart">
+        <mat-icon>shopping_cart</mat-icon>
+        <span class="badge" *ngIf="cartService.totalItems > 0">{{ cartService.totalItems }}</span>
+      </button>
+
+      <span class="username">Hello, {{ loggedInUser }}</span>
+      <button mat-icon-button (click)="logout()" matTooltip="Logout">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </ng-container>
+
+    <ng-template #loginTpl>
+      <button mat-raised-button color="accent" routerLink="/login">Login</button>
+    </ng-template>
+  </div>
+</mat-toolbar>

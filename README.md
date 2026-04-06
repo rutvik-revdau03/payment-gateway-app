@@ -5,10 +5,12 @@ A full-stack application featuring a FastAPI backend and an Angular frontend, in
 ## Key Features
 
 - **Live Currency Conversion**: Automatically fetches the latest USD to INR exchange rates.
+- **Role-Based Access Control (RBAC)**: Supports Admin and Normal user roles with different navigation and permissions.
+- **Admin Dashboard**: Specialized interface for Admins to manage and add new products to the inventory.
 - **Razorpay Integration**: Seamless 2-step payment process (Create Order → Verify Signature).
 - **Automated QR Receipts**: Generates a unique QR code for every successful transaction.
-- **Database Storage**: Stores product data and transaction history in MySQL.
-- **Modern UI**: Clean Material Design interface for smooth product selection and checkout.
+- **Database Storage**: Stores product data, users, and transaction history in MySQL.
+- **Modern UI**: Clean Material Design interface with standalone components and route guards.
 
 ## Project Structure
 
@@ -16,21 +18,23 @@ A full-stack application featuring a FastAPI backend and an Angular frontend, in
 payment-gateway-app/
 ├── backend/            # FastAPI (Python)
 │   ├── app/
-│   │   ├── routes/     # API Endpoints
+│   │   ├── routes/     # API Endpoints (Auth, Product, Payment)
 │   │   ├── services/   # Business Logic (Currency & QR)
-│   │   └── models.py   # Database Schema
+│   │   └── models.py   # Database Schema (User, Product, Transaction)
 │   └── main.py         # Entry point
 ├── frontend/           # Angular (TypeScript)
 │   ├── src/app/
-│   │   ├── components/ # UI Components (Products, Payment, Success)
-│   │   └── services/   # Backend API integration
+│   │   ├── pages/      # Route-level pages (Admin, Landing, Login, Signup)
+│   │   ├── components/ # Reusable UI Components
+│   │   ├── services/   # Backend API integration
+│   │   └── guards/     # Route protection (AdminGuard)
 └── PROJECT_DOCUMENTATION.md   # Detailed function and method analysis
 ```
 
 ## Tech Stack
 
 - **Backend**: FastAPI, SQLAlchemy, Pydantic, Razorpay SDK, HTTPX.
-- **Frontend**: Angular 17+, Angular Material, Razorpay Checkout SDK.
+- **Frontend**: Angular 17+ (Signals/Standalone), Angular Material.
 - **Database**: MySQL.
 - **Services**: Frankfurter API (Exchange Rates).
 

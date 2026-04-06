@@ -1,5 +1,6 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, DECIMAL, TIMESTAMP, text
+from sqlalchemy import Column, Integer, String, DECIMAL, TIMESTAMP, text, ForeignKey
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -13,21 +14,50 @@ class Product(Base):
     price = Column(DECIMAL(10, 2))              # Product price in USD
 
 
-# ─── TABLE 2: transactions ────────────────────────────────────────────────────
+# ─── TABLE 2: transactions (Payment Details) ──────────────────────────────────
 class Transaction(Base):
     __tablename__ = "transactions"
 
-    id                  = Column(Integer, primary_key=True)   # Auto-increment ID
-    product_name        = Column(String(100))                  # Purchased product name
-    quantity            = Column(Integer)                      # Units purchased
-    amount_usd          = Column(DECIMAL(10, 2))              # Total in USD
-    amount_inr          = Column(DECIMAL(10, 2))              # Total in INR (live rate)
-    exchange_rate       = Column(DECIMAL(10, 4))              # Live USD→INR rate used
-    payment_method      = Column(String(50))                   # e.g. "upi", "card"
-    status              = Column(String(50))                   # "SUCCESS" or "FAILED"
-    razorpay_order_id   = Column(String(100))                 # Razorpay order ID
-    razorpay_payment_id = Column(String(100))                 # Razorpay payment ID
-    created_at          = Column(
-        TIMESTAMP,
-        server_default=text('CURRENT_TIMESTAMP')              # Auto timestamp on insert
-    )
+    id                  = Column(Integer, primary_key=True)
+    product_name        = Column(String(100))
+    quantity            = Column(Integer)
+    amount_usd          = Column(DECIMAL(10, 2))
+    amount_inr          = Column(DECIMAL(10, 2))
+    exchange_rate       = Column(DECIMAL(10, 4))
+    payment_method      = Column(String(50))
+    status              = Column(String(50))
+    razorpay_order_id   = Column(String(100))
+    razorpay_payment_id = Column(String(100))
+    user_id             = Column(Integer, ForeignKey("users.id"))
+    created_at          = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'))
+    
+    user = relationship("User", back_populates="transactions")
+
+# ─── TABLE 4: orders (Customer Facing Records) ────────────────────────────────
+class Order(Base):
+    __tablename__ = "orders"
+
+    id           = Column(Integer, primary_key=True)     # Auto PK
+    order_number = Column(String(50), unique=True)        # Formal Order ID (e.g. SW-123)
+    user_id      = Column(Integer, ForeignKey("users.id")) # Link to user (FK)
+    product_name = Column(String(100))
+    quantity     = Column(Integer)
+    total_usd    = Column(DECIMAL(10, 2))
+    total_inr    = Column(DECIMAL(10, 2))
+    status       = Column(String(20), default="Pending") # "Pending", "Completed"
+    created_at   = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'))
+
+    user = relationship("User", back_populates="orders")
+
+# ─── TABLE 3: users ──────────────────────────────────────────────────────────
+class User(Base):
+    __tablename__ = "users"
+
+    id       = Column(Integer, primary_key=True, index=True)
+    username = Column(String(50), unique=True, index=True)
+    email    = Column(String(100), unique=True, index=True)
+    password = Column(String(255))
+    role     = Column(String(20), default="normal")     # "admin" or "normal"
+    
+    transactions = relationship("Transaction", back_populates="user")
+    orders       = relationship("Order", back_populates="user")

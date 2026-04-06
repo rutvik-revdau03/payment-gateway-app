@@ -10,10 +10,6 @@ The backend is built with FastAPI, SQLAlchemy (MySQL), and integrates with Razor
 
 ### `backend/app/main.py`
 The entry point of the FastAPI application.
-- **`root()`**:
-  - **Type**: GET Endpoint (`/`)
-  - **Description**: A simple health check endpoint to confirm the API is running.
-  - **Returns**: A JSON object with the status and a welcome message.
 
 ### `backend/app/database.py`
 Handles the database connection and session management.
@@ -25,8 +21,11 @@ Handles the database connection and session management.
 Defines the database schema using SQLAlchemy.
 - **`Product`**:
   - **Fields**: `id`, `name`, `price` (USD).
+- **`User`**:
+  - **Fields**: `id`, `username`, `email`, `password` (hashed), `role` ("admin" or "normal").
+  - **Relationships**: Linked to `transactions` and `orders`.
 - **`Transaction`**:
-  - **Fields**: `id`, `product_name`, `quantity`, `amount_usd`, `amount_inr`, `exchange_rate`, `payment_method`, `status`, `razorpay_order_id`, `razorpay_payment_id`, `created_at`.
+  - **Fields**: `id`, `product_name`, `quantity`, `amount_usd`, `amount_inr`, `exchange_rate`, `payment_method`, `status`, `razorpay_order_id`, `razorpay_payment_id`, `user_id`, `created_at`.
 
 ### `backend/app/routes/payment.py`
 Manages all payment-related endpoints and logic.
@@ -44,6 +43,15 @@ Manages all payment-related endpoints and logic.
 - **`get_transactions()`**:
   - **Type**: GET Endpoint (`/transactions`)
   - **Description**: Retrieves all recorded transactions from the database, ordered by date.
+
+### `backend/app/routes/auth.py`
+Handles user identity and access control.
+- **`signup(user_in: UserCreate)`**:
+  - **Type**: POST Endpoint (`/auth/signup`)
+  - **Description**: Registers a new user with a hashed password and specified role (admin/normal).
+- **`login(user_in: UserLogin)`**:
+  - **Type**: POST Endpoint (`/auth/login`)
+  - **Description**: Verifies credentials and returns user details including the assigned 'role' for frontend permissions.
 
 ### `backend/app/routes/product.py`
 Handles product-related operations.
@@ -79,10 +87,17 @@ The frontend is a standalone Angular application using Material Design and the R
 ### `frontend/src/app/services/api.services.ts`
 The central service for all backend communication.
 - **`getProducts()`**: Fetches products from `/products`.
+- **`addProduct(data)`**: Creates a new product at `/products` (restricted to Admin in UI).
 - **`getExchangeRate()`**: Fetches the live rate from `/exchange-rate`.
 - **`createOrder(data)`**: Initiates order creation at `/payment/create-order`.
 - **`verifyPayment(data)`**: Verifies payment outcome at `/payment/verify`.
 - **`getTransactions()`**: Fetches transaction history from `/transactions`.
+
+### `frontend/src/app/guards/admin.guard.ts`
+Security layer for route protection.
+- **`adminGuard()`**:
+  - **Type**: CanActivateFn
+  - **Description**: Verifies if the logged-in user has the `admin` role in `localStorage`. Redirects to the home page if access is unauthorized.
 
 ### `frontend/src/app/components/products/products.component.ts`
 The landing page where users select products.
@@ -100,6 +115,15 @@ The checkout page where payment is processed.
 - **`verifyPayment(razorpayResponse)`**: Passes the Razorpay result back to the backend for verification and storage.
 - **`goSuccess()`**: Navigates to the success page after confirmation.
 
-### `frontend/src/app/components/success/success.component.ts`
-The final confirmation page.
-- **`newOrder()`**: Resets the flow by navigating back to the product selection.
+### `frontend/src/app/pages/admin/admin.component.ts`
+The administrative management dashboard.
+- **`onSubmit()`**: Sends a POST request to add a new product to the database via `ApiService`.
+- **`goBack()`**: Simple navigation back to the shop storefront.
+
+### `frontend/src/app/pages/signup/signup.component.ts`
+Onboarding interface for new users.
+- **`signup()`**: Handles user registration and captures the selected 'role' (Admin or User).
+
+### `frontend/src/app/pages/login/login.component.ts`
+Authentication interface.
+- **`login()`**: Persists the session by storing the `user`, `userId`, and `role` in `localStorage` upon success.

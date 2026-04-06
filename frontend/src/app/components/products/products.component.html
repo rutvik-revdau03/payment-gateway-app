@@ -1,61 +1,82 @@
-<div class="page-wrapper">
-  <mat-card class="main-card">
+<div class="cart-container page-wrapper">
+  <div class="hero-section small-hero">
+    <h1>Your <span class="accent">Cart</span></h1>
+    <p>Review your selection and proceed to secure payment.</p>
+  </div>
 
-    <mat-card-header>
-      <mat-card-title>🛒 Select Product</mat-card-title>
-      <!-- Live exchange rate badge -->
-      <span class="rate-badge">
-       {{ rateMessage }}
-      </span>
-    </mat-card-header>
+  <div class="cart-content-grid">
+    <mat-card class="main-cart-card" style="animation: slideUp 0.8s ease-out forwards; opacity: 0;">
+      <mat-card-header>
+        <mat-card-title>Items in Selection</mat-card-title>
+        <span class="rate-badge">{{ rateMessage }}</span>
+      </mat-card-header>
 
-    <mat-card-content>
-
-      <!-- Loading spinner while products are fetching -->
-      <div *ngIf="loading" class="spinner-wrap">
-        <mat-spinner diameter="40"></mat-spinner>
-        <p>Loading products...</p>
-      </div>
-
-      <div *ngIf="!loading">
-
-        <!-- Product Dropdown -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Product</mat-label>
-          <mat-select [(ngModel)]="selected">
-            <mat-option *ngFor="let p of products" [value]="p">
-              {{ p.name }} — ${{ p.price }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <!-- Quantity Input -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Quantity</mat-label>
-          <input matInput type="number" [(ngModel)]="quantity" min="1">
-        </mat-form-field>
-
-        <!-- Estimated INR total (live calculation) -->
-        <div class="estimate" *ngIf="selected && exchangeRate">
-          <p>
-            Estimated Total:
-            <strong>{{ estimatedInr }}</strong>
-            <span class="rate-note">(at live rate {{ rateMessage }})</span>
-          </p>
+      <mat-card-content>
+        <!-- Cart Items -->
+        <div class="cart-items" *ngIf="cartItems.length > 0; else emptyCart">
+          <mat-card *ngFor="let item of cartItems; let i = index" class="cart-item-card" [style.animation-delay]="(i * 0.1) + 's'" style="animation: slideUp 0.6s ease-out forwards; opacity: 0;">
+            <div class="cart-item-layout">
+              <div class="item-visual">
+                 <div class="item-icon-box">
+                    <mat-icon>{{ item.icon }}</mat-icon>
+                 </div>
+                 <div class="item-details">
+                   <h3>{{ item.name }}</h3>
+                   <p class="price-info">
+                     <span class="unit-price">${{ item.price }}</span>
+                     <span class="quantity">x {{ item.quantity }}</span>
+                   </p>
+                 </div>
+              </div>
+              
+              <div class="cart-item-actions">
+                <button mat-icon-button color="warn" (click)="deleteItem(item.id)" title="Remove Item">
+                  <mat-icon>delete</mat-icon>
+                </button>
+                <button mat-raised-button color="primary" class="pay-item-btn highlight-pulse" (click)="checkoutItem(item)">
+                  Pay ${{ item.price * item.quantity }}
+                  <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-card>
         </div>
 
-        <!-- Next Button -->
-        <button
-          mat-raised-button
-          color="primary"
-          class="full-width action-btn"
-          (click)="proceed()"
-          [disabled]="!selected || quantity <= 0">
-          Next → Proceed to Payment
-        </button>
+        <ng-template #emptyCart>
+          <div class="empty-state fadeIn">
+             <div class="empty-icon-ring">
+               <mat-icon class="empty-icon">shopping_cart</mat-icon>
+             </div>
+             <h3>Your cart is empty</h3>
+             <p>Discover our exclusive collections and start fulfilling your wishlist today.</p>
+             <button mat-raised-button color="primary" routerLink="/" style="margin-top: 2rem;">Explore Shopping</button>
+          </div>
+        </ng-template>
+      </mat-card-content>
+    </mat-card>
 
+    <!-- Side Summary/Tips -->
+    <div class="cart-sidebar" *ngIf="cartItems.length > 0" style="animation: fadeIn 1s ease-out forwards; opacity: 0; animation-delay: 0.3s;">
+      <div class="sidebar-item">
+        <div class="side-icon primary"><mat-icon>verified</mat-icon></div>
+        <div class="side-text">
+          <h4>Guaranteed Safe</h4>
+          <p>Your transactions are 100% encrypted and secured.</p>
+        </div>
+      </div>
+      
+      <div class="sidebar-item">
+        <div class="side-icon second"><mat-icon>sync</mat-icon></div>
+        <div class="side-text">
+          <h4>Auto Conversion</h4>
+          <p>We handle all USD to INR currency conversions instantly.</p>
+        </div>
       </div>
 
-    </mat-card-content>
-  </mat-card>
+      <div class="order-tips">
+        <mat-icon>info</mat-icon>
+        <p>Purchasing individual items allows for faster individual shipment tracking!</p>
+      </div>
+    </div>
+  </div>
 </div>

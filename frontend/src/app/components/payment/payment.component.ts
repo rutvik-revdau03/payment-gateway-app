@@ -3,11 +3,14 @@ import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.services';
 import { Router } from '@angular/router';
+import { OrderSummaryComponent } from '../../shared/order-summary/order-summary.component';
+
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 
 declare var Razorpay: any;
 
@@ -20,7 +23,9 @@ declare var Razorpay: any;
     MatCardModule,
     MatButtonModule,
     MatSelectModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatIconModule,
+    OrderSummaryComponent
   ],
   templateUrl: './payment.component.html',
   styleUrl: './payment.component.css'
@@ -60,8 +65,16 @@ export class PaymentComponent implements OnInit {
     }
 
     const stored = localStorage.getItem('order');
+    const user = localStorage.getItem('user');
+
+    if (!user) {
+      alert('Authentication Required. Please log in to complete your purchase.');
+      this.router.navigate(['/login']);
+      return;
+    }
+
     if (!stored) {
-      alert('No order found. Please select a product first.');
+      alert('No product selected. Please select a product first.');
       this.router.navigate(['/']);
       return;
     }
@@ -88,12 +101,14 @@ export class PaymentComponent implements OnInit {
     if (!isPlatformBrowser(this.platformId)) return;
 
     this.loading = true;
+    const userId = parseInt(localStorage.getItem('userId') || '0');
 
     this.api.createOrder({
       product:  this.order.product.name,
       price:    this.order.product.price,
       quantity: this.order.quantity,
-      method:   this.method
+      method:   this.method,
+      user_id:  userId
     }).subscribe({
       next: (orderRes: any) => {
         this.loading = false;
@@ -165,6 +180,8 @@ export class PaymentComponent implements OnInit {
   }
 
   verifyPayment(razorpayResponse: any) {
+    const userId = parseInt(localStorage.getItem('userId') || '0');
+
     this.api.verifyPayment({
       razorpay_order_id:   razorpayResponse.razorpay_order_id,
       razorpay_payment_id: razorpayResponse.razorpay_payment_id,
@@ -174,7 +191,8 @@ export class PaymentComponent implements OnInit {
       amount_usd:          this.pendingOrder.usd,
       amount_inr:          this.pendingOrder.inr,
       exchange_rate:       this.pendingOrder.rate,
-      method:              this.method
+      method:              this.method,
+      user_id:             userId
     }).subscribe({
       next: (res: any) => {
         this.loading = false;
@@ -190,7 +208,7 @@ export class PaymentComponent implements OnInit {
   }
 
   goSuccess() {
-    this.router.navigate(['/success']);7
+    this.router.navigate(['/success'], { state: { result: this.result } });
   }
 
   goBack() {

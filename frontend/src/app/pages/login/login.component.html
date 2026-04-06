@@ -1,0 +1,42 @@
+<div class="auth-container login-bg">
+  <mat-card class="auth-card" style="animation: slideUp 0.8s ease-out forwards; opacity: 0;">
+    <div class="auth-header">
+      <div class="auth-icon-ring">
+        <mat-icon>login</mat-icon>
+      </div>
+      <h2>Welcome <span class="accent">Back</span></h2>
+      <p>Log in to access your secure shopping profile.</p>
+    </div>
+
+    <mat-card-content>
+      <form (ngSubmit)="login()" #loginForm="ngForm" class="premium-form">
+        <mat-form-field appearance="outline" class="full-width" style="margin-bottom: 2rem;">
+          <mat-label>Username</mat-label>
+          <input matInput name="username" [(ngModel)]="username" required placeholder="Your registered handle">
+          <mat-icon matSuffix>account_circle</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width" style="margin-bottom: 1.5rem;">
+          <mat-label>Password</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" name="password" [(ngModel)]="password" required placeholder="Enter your secret key">
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword" type="button" class="visibility-btn">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <div *ngIf="error" class="error-msg fadeIn">
+          <mat-icon>warning</mat-icon> {{ error }}
+        </div>
+
+        <button mat-raised-button color="primary" class="auth-btn highlight-pulse" [disabled]="!loginForm.valid || loading">
+          <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+          <span *ngIf="!loading">Secure Sign In</span>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        New to ShopWave? <a routerLink="/signup">Create Your Account</a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

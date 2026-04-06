@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from app.routes import product, payment
+from app.routes import product, payment, auth
 from app.database import engine
 from app.models import Base
 import os
@@ -36,23 +36,12 @@ app.add_middleware(
 )
 
 # ─── Register Route Files ─────────────────────────────────────────────────────
-# All endpoints defined in product.py and payment.py are registered here
 app.include_router(product.router)    # /products
-app.include_router(payment.router)    # /exchange-rate, /payment/create-order,
-                                      # /payment/verify, /transactions
+app.include_router(payment.router)    # /exchange-rate...
+app.include_router(auth.router)       # /auth/signup, /auth/login
 
 # ─── Serve QR Code Images as Static Files ────────────────────────────────────
 # QR images saved in qr_codes/ folder are served at /qr_codes/<filename>
 # Angular can display them as: <img src="http://localhost:8000/qr_codes/uuid.png">
 app.mount("/qr_codes", StaticFiles(directory="qr_codes"), name="qr")
 
-
-# ─── Root Health Check ────────────────────────────────────────────────────────
-@app.get("/")
-def root():
-    """Simple health check endpoint to confirm API is running"""
-    return {
-        "status": "running",
-        "message": "Payment Gateway API is live",
-        "docs": "/docs"     # FastAPI auto-generates Swagger UI at /docs
-    }

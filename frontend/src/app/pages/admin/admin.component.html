@@ -1,0 +1,79 @@
+<div class="admin-container">
+  <div class="hero-section">
+    <h1>Inventory <span class="accent">Management</span></h1>
+    <p>Empowering administrators to shape the future of ShopWave's catalog.</p>
+  </div>
+
+  <div class="admin-content page-wrapper">
+    <div class="admin-grid">
+      <!-- Add Product Form -->
+      <mat-card class="admin-card" style="animation: slideUp 0.8s ease-out forwards; opacity: 0;">
+        <mat-card-header>
+          <div mat-card-avatar class="card-icon-box second">
+            <mat-icon>add_shopping_cart</mat-icon>
+          </div>
+          <mat-card-title>Create New Product</mat-card-title>
+          <mat-card-subtitle>Fill in the details to expand the inventory.</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <form (ngSubmit)="onSubmit()" #adminForm="ngForm" class="premium-form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Product Name</mat-label>
+              <input matInput name="name" [(ngModel)]="product.name" required placeholder="Enter product name">
+              <mat-icon matSuffix>inventory_2</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Price (USD)</mat-label>
+              <input matInput type="number" name="price" [(ngModel)]="product.price" required min="0.01" step="0.01" placeholder="0.00">
+              <mat-icon matSuffix>payments</mat-icon>
+            </mat-form-field>
+
+            <div *ngIf="successMessage" class="success-msg fadeIn">
+              <mat-icon>check_circle</mat-icon> {{ successMessage }}
+            </div>
+            <div *ngIf="errorMessage" class="error-msg fadeIn">
+              <mat-icon>error</mat-icon> {{ errorMessage }}
+            </div>
+
+            <div class="form-actions">
+              <button mat-raised-button color="primary" type="submit" [disabled]="!adminForm.valid || loading" class="submit-btn highlight-pulse">
+                <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+                <span *ngIf="!loading">Add Product</span>
+              </button>
+              
+              <button mat-button type="button" (click)="goBack()" class="cancel-btn">
+                Back to Shop
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Admin Dashboard Preview/Tips -->
+      <div class="dashboard-sidebar" style="animation: fadeIn 1s ease-out forwards; opacity: 0; animation-delay: 0.3s;">
+        <div class="sidebar-item">
+          <div class="side-icon primary"><mat-icon>insights</mat-icon></div>
+          <div class="side-text">
+            <h4>Inventory Insights</h4>
+            <p>Monitor stock levels and analyze sales trends in real-time.</p>
+          </div>
+        </div>
+
+        <div class="sidebar-item">
+          <div class="side-icon second"><mat-icon>shield</mat-icon></div>
+          <div class="side-text">
+            <h4>Access Control</h4>
+            <p>Your session is protected by bank-grade admin encryption.</p>
+          </div>
+        </div>
+
+        <div class="tip-card">
+          <mat-icon>lightbulb</mat-icon>
+          <p><strong>Admin Tip:</strong> Adding concise, clear titles helps users find your products faster!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
