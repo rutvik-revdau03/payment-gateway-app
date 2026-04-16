@@ -1,0 +1,101 @@
+<div class="contact-container">
+  <div class="hero-section">
+    <div class="hero-canvas fadeIn"></div>
+    <h1>Get In <span class="accent">Touch</span></h1>
+    <p>We're here to help you scale your business with world-class support.</p>
+  </div>
+
+  <div class="contact-grid page-wrapper">
+    <!-- Contact Form Section -->
+    <mat-card class="contact-card premium-card" style="animation: slideUp 0.8s ease-out forwards; opacity: 0;">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon-box primary">
+          <mat-icon>chat_bubble</mat-icon>
+        </div>
+        <mat-card-title>Send us a Message</mat-card-title>
+        <mat-card-subtitle>We usually reply within 24 hours.</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <form class="premium-form animated-form">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="flex-field slideIn" style="animation-delay: 0.1s;">
+              <mat-label>Your Name</mat-label>
+              <input matInput placeholder="John Doe">
+              <mat-icon matPrefix>person</mat-icon>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="flex-field slideIn" style="animation-delay: 0.2s;">
+              <mat-label>Email Address</mat-label>
+              <input matInput type="email" placeholder="john@example.com">
+              <mat-icon matPrefix>alternate_email</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width slideIn" style="animation-delay: 0.3s;">
+            <mat-label>Subject</mat-label>
+            <mat-select>
+              <mat-option value="support">
+                <div class="option-content"><mat-icon>support_agent</mat-icon> <span>Technical Support</span></div>
+              </mat-option>
+              <mat-option value="billing">
+                <div class="option-content"><mat-icon>payments</mat-icon> <span>Billing Inquiry</span></div>
+              </mat-option>
+              <mat-option value="feature">
+                <div class="option-content"><mat-icon>auto_awesome</mat-icon> <span>Feature Request</span></div>
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>topic</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width slideIn" style="animation-delay: 0.4s;">
+            <mat-label>Message</mat-label>
+            <textarea matInput rows="5" placeholder="Tell us how we can help..."></textarea>
+            <mat-icon matPrefix>edit_note</mat-icon>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" class="submit-btn highlight-pulse full-width slideIn" style="animation-delay: 0.5s;">
+            Send Secure Message
+            <mat-icon iconPositionEnd>send</mat-icon>
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Support Info Section -->
+    <div class="support-sidebar" style="animation: fadeIn 1s ease-out forwards; opacity: 0; animation-delay: 0.3s;">
+      <div class="sidebar-item fadeIn" style="animation-delay: 0.6s;">
+        <div class="side-icon-ring primary"><mat-icon>mail</mat-icon></div>
+        <div class="side-text">
+          <p class="label">Direct Support</p>
+          <a href="mailto:support&#64;shopwave.com" class="vibrant-link">support&#64;shopwave.com</a>
+        </div>
+      </div>
+
+      <div class="sidebar-item fadeIn" style="animation-delay: 0.7s;">
+        <div class="side-icon-ring second"><mat-icon>forum</mat-icon></div>
+        <div class="side-text">
+          <p class="label">Developer Hub</p>
+          <a href="#" class="vibrant-link secondary">Join Discord Hub</a>
+        </div>
+      </div>
+
+      <div class="vibrant-stats-card fadeIn" style="animation-delay: 0.8s;">
+          <h3 class="side-heading">Trust Matrix</h3>
+          <div class="stat-item">
+            <mat-icon>verified</mat-icon>
+            <div>
+              <p><strong>Military-Grade Security</strong></p>
+              <p class="desc">End-to-end industry standard encryption.</p>
+            </div>
+          </div>
+          <div class="stat-item">
+            <mat-icon>public</mat-icon>
+            <div>
+              <p><strong>Digital Presence</strong></p>
+              <p class="desc">Reliable support across 100+ nations.</p>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

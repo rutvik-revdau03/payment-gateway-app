@@ -1,0 +1,19 @@
+<mat-card class="order-summary surface">
+  <mat-card-header>
+    <mat-card-title>Order Summary</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content class="summary-content">
+    <div class="row"><span>Product</span><strong>{{ data.product.name }}</strong></div>
+    <div class="row"><span>Quantity</span><strong>{{ data.quantity }}</strong></div>
+    <div class="row"><span>Price (USD)</span><strong>${{ data.product.price }} × {{ data.quantity }}</strong></div>
+    <div class="row highlight"><span>Total (USD)</span><strong>${{ data.totalUsd }}</strong></div>
+    <div class="row highlight-inr"><span>Total (INR)</span><strong>₹{{ data.totalInr }}</strong></div>
+    <div class="row"><span>Live Rate</span><strong>1 USD = ₹{{ data.rate }}</strong></div>
+
+    <!-- Show payment ID only when present (success page) -->
+    <div class="row" *ngIf="data.paymentId">
+      <span>Payment ID</span><strong class="pay-id">{{ data.paymentId }}</strong>
+    </div>
+  </mat-card-content>
+</mat-card>

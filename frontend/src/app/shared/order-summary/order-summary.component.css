@@ -1,0 +1,17 @@
+/* src/app/shared/order-summary/order-summary.component.css */
+
+.order-summary {
+  margin: 1rem 0;
+}
+.summary-content .row {
+  display: flex;
+  justify-content: space-between;
+  padding: .4rem 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+.summary-content .row:last-child {
+  border-bottom: none;
+}
+.highlight   { background: var(--color-primary-l); font-weight: 600; }
+.highlight-inr { background: var(--color-accent-l, #fff8e1); font-weight: 600; }
+.pay-id { font-family: monospace; word-break: break-all; }

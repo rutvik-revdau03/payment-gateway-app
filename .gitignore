@@ -1,0 +1,24 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+.env
+
+# Node / Angular
+**/node_modules/
+**/.angular/
+frontend/dist/
+frontend/.vscode/
+
+# Project Specific
+Expected\ Images\ of\ Project/
+Expected Images of Project/
+backend/qr_codes/*.png
+backend/qr_codes/uuid_*.png
+backend/qr_codes/*.jpg
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+*.swp

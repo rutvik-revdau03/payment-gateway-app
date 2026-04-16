@@ -1,0 +1,232 @@
+.payment-container {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  padding-bottom: 5rem;
+}
+
+.hero-section.small-hero {
+  background: var(--gradient-main);
+  padding: 5rem 2rem;
+  text-align: center;
+  color: white;
+  clip-path: ellipse(150% 100% at 50% 0%);
+}
+
+.payment-content-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 4rem;
+  max-width: 1100px;
+  margin: -3rem auto 0;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 5;
+}
+
+.premium-card {
+  padding: 3rem;
+  border-radius: 30px !important;
+  border: none !important;
+  box-shadow: var(--shadow-xl) !important;
+}
+
+.back-link-inline {
+  margin-left: auto;
+  color: var(--color-text-l) !important;
+  font-size: 0.9rem !important;
+}
+
+.inline-details-table {
+  background: #f8fafc;
+  padding: 2rem;
+  border-radius: 20px;
+  margin-bottom: 2.5rem;
+  border: 1px solid #f1f5f9;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+  color: var(--color-text-l);
+}
+
+.detail-row.highlight {
+  color: var(--color-text);
+  font-weight: 700;
+  margin-top: 1rem;
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 1rem;
+}
+
+.detail-row.highlight-inr {
+  color: #166534;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.method-selector {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.option-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pay-btn {
+  padding: 1.25rem !important;
+  font-size: 1.15rem !important;
+  border-radius: 15px !important;
+}
+
+.rate-status-footer {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-text-l);
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.summary-card {
+  padding: 2.5rem;
+  border-radius: 30px !important;
+  border: none !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(20px);
+}
+
+.summary-visual-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  color: var(--color-text-l);
+}
+
+.summary-divider {
+  height: 1px;
+  background: linear-gradient(to right, #e2e8f0, transparent);
+  margin: 1.5rem 0;
+}
+
+.bold-total {
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.bold-total.highlight {
+  color: var(--color-primary);
+  font-size: 1.5rem;
+}
+
+.live-rate-badge {
+  background: #f1f5f9;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text-l);
+  width: fit-content;
+  margin-top: 1rem;
+}
+
+/* Receiptredesign */
+.receipt-central-view {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.receipt-celebration {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.confetti-ring {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.receipt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  padding: 1rem;
+}
+
+.receipt-data-table {
+  background: #f8fafc;
+  padding: 2rem;
+  border-radius: 20px;
+}
+
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  color: var(--color-text-l);
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.5rem;
+}
+
+.data-row.highlight {
+  border-bottom: none;
+  background: #f0fdf4;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-top: 1.5rem;
+}
+
+.inr-green { color: #166534; font-size: 1.25rem; }
+.id-text { font-size: 0.75rem; color: #64748b; }
+
+.qr-receipt-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-placeholder {
+  text-align: center;
+}
+
+.qr-border {
+  padding: 1.5rem;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  margin-bottom: 1.5rem;
+}
+
+.qr-border img { width: 100%; max-width: 180px; }
+
+.receipt-footer {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.finish-btn {
+  padding: 1rem 4rem !important;
+  border-radius: 50px !important;
+  font-size: 1.25rem !important;
+}
+
+@media (max-width: 900px) {
+  .payment-content-grid, .receipt-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}

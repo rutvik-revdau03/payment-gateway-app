@@ -1,0 +1,57 @@
+<div class="auth-container signup-bg">
+  <mat-card class="auth-card" style="animation: slideUp 0.8s ease-out forwards; opacity: 0;">
+    <div class="auth-header">
+      <div class="auth-icon-ring">
+        <mat-icon>person_add</mat-icon>
+      </div>
+      <h2>Join <span class="accent">ShopWave</span></h2>
+      <p>Start your journey into premium commerce today.</p>
+    </div>
+
+    <mat-card-content>
+      <form (ngSubmit)="signup()" #signupForm="ngForm" class="premium-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username</mat-label>
+          <input matInput name="username" [(ngModel)]="username" required placeholder="Choose a unique handle">
+          <mat-icon matSuffix>account_circle</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email Address</mat-label>
+          <input matInput type="email" name="email" [(ngModel)]="email" required placeholder="name@example.com">
+          <mat-icon matSuffix>email</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" name="password" [(ngModel)]="password" required maxlength="72" placeholder="Min 8 characters">
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword" type="button" class="visibility-btn">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Account Category</mat-label>
+          <mat-select name="role" [(ngModel)]="role" required>
+            <mat-option value="normal">Normal User</mat-option>
+            <mat-option value="admin">Administrator</mat-option>
+          </mat-select>
+          <mat-icon matSuffix>verified_user</mat-icon>
+        </mat-form-field>
+
+        <div *ngIf="error" class="error-msg fadeIn">
+          <mat-icon>error_outline</mat-icon> {{ error }}
+        </div>
+
+        <button mat-raised-button color="primary" class="auth-btn highlight-pulse" [disabled]="!signupForm.valid || loading">
+          <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+          <span *ngIf="!loading">Create My Account</span>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Already a member? <a routerLink="/login">Sign In Here</a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,141 @@
+<div class="payment-container page-wrapper">
+  <!-- Hero Section -->
+  <div class="hero-section small-hero" *ngIf="!result">
+    <h1>Finalize <span class="accent">Payment</span></h1>
+    <p>Complete your purchase securely via our global payment gateway.</p>
+  </div>
+
+  <div class="payment-content-grid" *ngIf="!result">
+    <!-- Left Column: Payment Method & Action -->
+    <div class="payment-actions-column" style="animation: slideUp 0.8s ease-out forwards; opacity: 0;">
+      <mat-card class="premium-card payment-card">
+        <mat-card-header>
+          <div mat-card-avatar class="card-icon-box primary">
+            <mat-icon>account_balance_wallet</mat-icon>
+          </div>
+          <mat-card-title>Select Method</mat-card-title>
+          <mat-card-subtitle>Choose your preferred payment provider</mat-card-subtitle>
+          <button mat-button class="back-link-inline" (click)="goBack()"><mat-icon>arrow_back</mat-icon> Back</button>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="payment-form-stack">
+            <!-- Order Details Table (Inline for the Payment Card as in image) -->
+            <div class="inline-details-table">
+               <div class="detail-row"><span>Product</span><strong>{{ order.product?.name }}</strong></div>
+               <div class="detail-row"><span>Quantity</span><strong>{{ order.quantity }}</strong></div>
+               <div class="detail-row"><span>Price (USD)</span><strong>\${{ order.product?.price }} × {{ order.quantity }}</strong></div>
+               <div class="detail-row highlight"><span>Total (USD)</span><strong>\${{ totalUsd }}</strong></div>
+               <div class="detail-row highlight-inr">
+                 <span>Total (INR)</span>
+                 <strong>₹{{ totalInr }}</strong>
+               </div>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width method-selector">
+              <mat-label>Payment Method</mat-label>
+              <mat-select [(ngModel)]="method">
+                <mat-option value="UPI">
+                  <div class="option-content"><mat-icon>qr_code</mat-icon> <span>UPI</span></div>
+                </mat-option>
+                <mat-option value="Card">
+                  <div class="option-content"><mat-icon>credit_card</mat-icon> <span>Credit / Debit Card</span></div>
+                </mat-option>
+                <mat-option value="NetBanking">
+                  <div class="option-content"><mat-icon>account_balance</mat-icon> <span>Net Banking</span></div>
+                </mat-option>
+                <mat-option value="Wallet">
+                  <div class="option-content"><mat-icon>account_balance_wallet</mat-icon> <span>Wallet</span></div>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" class="full-width pay-btn highlight-pulse" (click)="pay()" [disabled]="loading || paymentInProgress">
+              <mat-spinner diameter="20" *ngIf="loading || paymentInProgress"></mat-spinner>
+              <span *ngIf="!loading && !paymentInProgress">Pay ₹{{ totalInr }} via Razorpay</span>
+              <span *ngIf="loading && !paymentInProgress">Initializing...</span>
+              <span *ngIf="paymentInProgress">Processing...</span>
+            </button>
+
+            <p class="rate-status-footer" *ngIf="liveRate">
+               <mat-icon>info</mat-icon> Live Rate: 1 USD = ₹{{ liveRate }} (powered by Frankfurter API)
+            </p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Right Column: Order Summary (Floating card) -->
+    <div class="summary-column" style="animation: fadeIn 1s ease-out forwards; opacity: 0; animation-delay: 0.3s;">
+      <mat-card class="summary-card glass-surface">
+        <mat-card-header>
+          <mat-card-title>Order Summary</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="summary-visual-list">
+            <div class="summary-item">
+              <span class="label">Product</span>
+              <span class="value">{{ order.product?.name }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="label">Quantity</span>
+              <span class="value">{{ order.quantity }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="label">Price (USD)</span>
+              <span class="value">\${{ order.product?.price }} × {{ order.quantity }}</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-item bold-total">
+              <span class="label">Total (USD)</span>
+              <span class="value">\${{ totalUsd }}</span>
+            </div>
+            <div class="summary-item bold-total highlight">
+              <span class="label">Total (INR)</span>
+              <span class="value">₹{{ totalInr }}</span>
+            </div>
+            <div class="live-rate-badge">
+               Live Rate: 1USD = ₹{{ liveRate }}
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Receipt / Success State (Now fully redesigned in the success component mostly, but keep this legacy view consistent) -->
+  <div class="receipt-central-view" *ngIf="result" style="animation: fadeIn 0.8s ease-out forwards;">
+    <mat-card class="receipt-card premium-card">
+      <div class="receipt-celebration">
+        <div class="confetti-ring">🎉</div>
+        <h2>Payment <span class="accent">Successful!</span></h2>
+      </div>
+
+      <div class="receipt-grid">
+         <div class="receipt-data-table">
+            <div class="data-row"><span>Product</span><strong>{{ order.product?.name }}</strong></div>
+            <div class="data-row"><span>Quantity</span><strong>{{ order.quantity }}</strong></div>
+            <div class="data-row"><span>Paid (USD)</span><strong>\${{ totalUsd }}</strong></div>
+            <div class="data-row highlight"><span>Paid (INR)</span><strong class="inr-green">₹{{ totalInr }}</strong></div>
+            <div class="data-row"><span>Exchange Rate</span><strong>1 USD = ₹{{ liveRate }}</strong></div>
+            <div class="data-row"><span>Payment ID</span><strong class="id-text">{{ result.payment_id }}</strong></div>
+         </div>
+
+         <div class="qr-receipt-section">
+            <div class="qr-placeholder" *ngIf="result.qr">
+               <div class="qr-border">
+                  <img [src]="'http://127.0.0.1:8000' + result.qr" alt="Receipt QR">
+               </div>
+               <p><mat-icon>qr_code_2</mat-icon> Scan QR for receipt</p>
+            </div>
+         </div>
+      </div>
+
+      <div class="receipt-footer">
+        <button mat-raised-button color="primary" class="finish-btn highlight-pulse" (click)="goSuccess()">
+          Finish & View Order
+        </button>
+      </div>
+    </mat-card>
+  </div>
+</div>

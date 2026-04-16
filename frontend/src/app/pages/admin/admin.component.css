@@ -1,0 +1,135 @@
+.admin-tab-layout {
+  min-height: 100vh;
+  padding-bottom: 5rem;
+}
+
+.hero-section {
+  background: var(--gradient-main);
+  padding: 6rem 2rem;
+  text-align: center;
+  color: white;
+  clip-path: ellipse(150% 100% at 50% 0%);
+  margin-bottom: -4rem;
+}
+
+.modern-tabs {
+  background: white;
+  border-radius: 30px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+  overflow: hidden;
+  margin-top: 2rem;
+  min-height: 60vh;
+}
+
+.tab-content {
+  padding: 3rem;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
+.premium-card {
+  border-radius: 24px !important;
+  border: 1px solid #f1f5f9 !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important;
+}
+
+.card-icon-box {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1.5rem;
+}
+
+.card-icon-box.primary { background: #eef2ff; color: #6366f1; }
+.card-icon-box.secondary { background: #f0fdf4; color: #10b981; }
+.card-icon-box.accent { background: #fff7ed; color: #f97316; }
+.card-icon-box.warn { background: #fef2f2; color: #ef4444; }
+
+/* Inventory Items */
+.inventory-scroll-area {
+  max-height: 450px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.inventory-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 16px;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.inventory-item:hover { transform: translateX(8px); background: #f1f5f9; }
+
+.item-info strong { display: block; font-size: 1.1rem; }
+.price-tag { color: var(--primary-color); font-weight: 700; }
+
+.mini-input {
+  width: 70px;
+  padding: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-right: 10px;
+}
+
+/* Custom Table for Sales History */
+.history-table-container { margin-top: 1rem; }
+.custom-table { width: 100%; border-collapse: collapse; }
+.custom-table th, .custom-table td { padding: 1.25rem; text-align: left; border-bottom: 1px solid #f1f5f9; }
+.custom-table th { color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.profit { color: #10b981; font-weight: 800; }
+
+/* Notification Tiles */
+.notification-tile {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid #f1f5f9;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.notification-tile.unread { background: #f8fafc; border-left: 4px solid var(--primary-color); }
+.notification-tile mat-icon { font-size: 2rem; width: 2rem; height: 2rem; }
+.notif-text p { margin: 0; font-weight: 500; }
+.notif-text small { color: #94a3b8; }
+
+.tab-footer { margin-top: 4rem; text-align: center; }
+
+@media (max-width: 1024px) {
+  .admin-grid { grid-template-columns: 1fr; }
+  .tab-content { padding: 1.5rem; }
+}
+
+/* Dedicated View Adjustments */
+.dedicated-view {
+  margin-top: -5rem !important;
+}
+
+.hide-tab-header ::ng-deep .mat-mdc-tab-header {
+  display: none !important;
+}
+
+.pulse-bg {
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
+  animation: bgPulse 10s infinite alternate;
+}
+
+@keyframes bgPulse {
+  from { filter: hue-rotate(0deg); }
+  to { filter: hue-rotate(10deg); }
+}

@@ -1,0 +1,148 @@
+<div class="admin-container">
+  <div class="hero-section">
+    <h1>Inventory <span class="accent">Management</span></h1>
+    <p>Empowering administrators to shape the future of ShopWave's catalog.</p>
+  </div>
+
+  <div class="admin-tab-layout page-wrapper" [class.dedicated-view]="isDedicatedPage">
+    <mat-tab-group [(selectedIndex)]="selectedTabIndex" mat-stretch-tabs="false" mat-align-tabs="start" 
+                   class="modern-tabs" [class.hide-tab-header]="isDedicatedPage">
+      
+      <!-- TAB 1: Inventory & Management -->
+      <mat-tab label="📦 Inventory">
+        <div class="tab-content fade-in">
+          <div class="admin-grid">
+            <!-- Add Product Form -->
+            <mat-card class="premium-card">
+              <mat-card-header>
+                <div class="card-icon-box primary">
+                  <mat-icon>add_shopping_cart</mat-icon>
+                </div>
+                <mat-card-title>Create New Product</mat-card-title>
+                <mat-card-subtitle>Fill in the details to expand your catalog.</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <form #adminForm="ngForm" (ngSubmit)="onSubmit()" class="admin-form">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Product Name</mat-label>
+                    <input matInput name="name" [(ngModel)]="product.name" required>
+                    <mat-icon matSuffix>inventory_2</mat-icon>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Price (USD)</mat-label>
+                    <input matInput type="number" name="price" [(ngModel)]="product.price" required min="1">
+                    <mat-icon matSuffix>payments</mat-icon>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Initial Stock</mat-label>
+                    <input matInput type="number" name="stock" [(ngModel)]="product.stock_quantity" required min="1">
+                    <mat-icon matSuffix>unarchive</mat-icon>
+                  </mat-form-field>
+                  <div *ngIf="successMessage" class="success-msg fadeIn">{{ successMessage }}</div>
+                  <div *ngIf="errorMessage" class="error-msg fadeIn">{{ errorMessage }}</div>
+                  <button mat-raised-button color="primary" type="submit" [disabled]="!adminForm.valid || loading" class="submit-btn highlight-pulse">
+                    <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+                    <span *ngIf="!loading">Add Product</span>
+                  </button>
+                </form>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Management Cards -->
+            <div class="inventory-management">
+              <mat-card class="premium-card">
+                <mat-card-header>
+                  <mat-card-title>My Current Stock</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="inventory-scroll-area">
+                    <div *ngIf="myProducts.length === 0" class="empty-state">No products added yet.</div>
+                    <div *ngFor="let p of myProducts" class="inventory-item">
+                       <div class="item-info">
+                          <strong>{{ p.name }}</strong>
+                          <span class="price-tag">${{ p.price }}</span>
+                       </div>
+                       <div class="item-controls">
+                          <input type="number" #stockInput [value]="p.stock_quantity" class="mini-input">
+                          <button mat-button color="primary" (click)="updateStock(p, stockInput.value)">Save</button>
+                          <button mat-icon-button color="warn" (click)="deleteProduct(p.id)"><mat-icon>delete</mat-icon></button>
+                       </div>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- TAB 2: Sales History -->
+      <mat-tab label="📈 Sales History">
+        <div class="tab-content fade-in">
+          <mat-card class="premium-card">
+            <mat-card-header>
+              <div class="card-icon-box secondary"><mat-icon>history</mat-icon></div>
+              <mat-card-title>Your Real-time Sales</mat-card-title>
+              <mat-card-subtitle>Track high-performance items added by you</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content style="margin-top: 1.5rem;">
+              <div *ngIf="salesHistory.length === 0" class="empty-state">⚠️ No sales recorded for your products yet.</div>
+              <div class="history-table-container" *ngIf="salesHistory.length > 0">
+                <table class="custom-table">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Quantity</th>
+                      <th>Earnings (USD)</th>
+                      <th>Earnings (INR)</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let txn of salesHistory">
+                      <td>{{ txn.product_name }}</td>
+                      <td>{{ txn.quantity }}</td>
+                      <td class="profit">+${{ txn.amount_usd }}</td>
+                      <td>₹{{ txn.amount_inr }}</td>
+                      <td>{{ txn.created_at | date:'mediumDate' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+
+      <!-- TAB 3: Notifications -->
+      <mat-tab label="🔔 Notifications">
+        <div class="tab-content fade-in">
+          <mat-card class="premium-card">
+            <mat-card-header>
+              <div class="card-icon-box warn"><mat-icon>notifications_active</mat-icon></div>
+              <mat-card-title>Inventory Alerts</mat-card-title>
+              <mat-card-subtitle>Stay informed about your product stock status</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content style="margin-top: 1.5rem;">
+              <div *ngIf="notifications.length === 0" class="empty-state">All caught up! No notifications for your products.</div>
+              <div class="notification-list">
+                <div *ngFor="let n of notifications" class="notif-card" [class.unread]="n.is_read === 0">
+                  <mat-icon>{{ n.type === 'STOCK_OUT' ? 'warning' : 'info' }}</mat-icon>
+                  <div class="notif-body">
+                    <p>{{ n.message }}</p>
+                    <small>{{ n.created_at | date:'short' }}</small>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+    
+    <div class="tab-footer">
+       <button mat-button (click)="goBack()" color="accent"><mat-icon>arrow_back</mat-icon> Return to Marketplace</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<mat-toolbar color="primary" class="main-header">
+  <span class="logo" routerLink="/">
+    <mat-icon class="logo-icon">payments</mat-icon>
+    <span>ShopWave Gateway</span>
+  </span>
+
+  <span class="spacer"></span>
+
+  <div class="nav-links">
+    <button mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Products</button>
+    <button mat-button routerLink="/about" routerLinkActive="active">About</button>
+    <button mat-button routerLink="/contact" routerLinkActive="active">Contact</button>
+  </div>
+
+  <span class="spacer"></span>
+
+  <div class="user-actions">
+    <ng-container *ngIf="loggedInUser; else loginTpl">
+      <!-- Admin Specific: Notifications & Sales History (Dedicated Pages) -->
+      <ng-container *ngIf="isAdmin">
+        <button mat-icon-button routerLink="/admin/sales" matTooltip="Sales History" color="accent">
+          <mat-icon>trending_up</mat-icon>
+        </button>
+        <button mat-icon-button routerLink="/admin/notifications" matTooltip="Stock Notifications" color="warn">
+          <mat-icon>notifications_active</mat-icon>
+        </button>
+      </ng-container>
+
+      <!-- Regular User: Order History -->
+      <button mat-icon-button routerLink="/history" matTooltip="Order History" *ngIf="!isAdmin">
+        <mat-icon>history</mat-icon>
+      </button>
+
+      <!-- Cart Icon (Hidden for Admins) -->
+      <button mat-icon-button routerLink="/products" class="cart-btn" matTooltip="View Cart" *ngIf="!isAdmin">
+        <mat-icon>shopping_cart</mat-icon>
+        <span class="badge" *ngIf="cartService.totalItems > 0">{{ cartService.totalItems }}</span>
+      </button>
+
+      <span class="username">Hello, {{ loggedInUser }}</span>
+      <button mat-icon-button (click)="logout()" matTooltip="Logout">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </ng-container>
+
+    <ng-template #loginTpl>
+      <button mat-raised-button color="accent" routerLink="/login">Login</button>
+    </ng-template>
+  </div>
+</mat-toolbar>
