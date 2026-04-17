@@ -11,6 +11,7 @@ router = APIRouter(prefix="/products", tags=["products"])
 class ProductCreate(BaseModel):
     """Data required to add a new product"""
     name: str          # Product name e.g. "Laptop"
+    description: str = "" # Product description
     price: float       # Price in USD e.g. 999.99
     stock_quantity: int
     admin_id: int
@@ -35,6 +36,7 @@ def get_products(admin_id: int = None, db: Session = Depends(get_db)):
             results.append({
                 "id": p.id, 
                 "name": p.name, 
+                "description": p.description or "",
                 "price": float(p.price), 
                 "stock_quantity": p.stock_quantity, 
                 "admin_id": p.admin_id,
@@ -49,6 +51,7 @@ def update_product(product_id: int, data: ProductCreate, db: Session = Depends(g
     product = db.query(Product).filter(Product.id == product_id).first()
     if not product: raise HTTPException(status_code=404, detail="Product not found")
     product.name = data.name
+    product.description = data.description
     product.price = data.price
     product.stock_quantity = data.stock_quantity
     db.commit()
@@ -77,6 +80,7 @@ def add_product(data: ProductCreate, db: Session = Depends(get_db)):
 
         product = Product(
             name  = data.name,
+            description = data.description,
             price = data.price,
             stock_quantity = data.stock_quantity,
             admin_id = data.admin_id

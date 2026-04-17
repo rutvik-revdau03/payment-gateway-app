@@ -8,6 +8,7 @@
 
   <div class="nav-links">
     <button mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Products</button>
+    <button mat-button routerLink="/admin" routerLinkActive="active" *ngIf="isAdmin">Admin Panel</button>
     <button mat-button routerLink="/about" routerLinkActive="active">About</button>
     <button mat-button routerLink="/contact" routerLinkActive="active">Contact</button>
   </div>

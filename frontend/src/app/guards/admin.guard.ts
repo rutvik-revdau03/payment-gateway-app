@@ -12,7 +12,9 @@ export const adminGuard: CanActivateFn = (route, state) => {
   }
 
   // Not an admin? Send them home!
-  alert('⛔ Access Denied: This area is for Admins only.');
+  if (typeof window !== 'undefined') {
+    alert('⛔ Access Denied: This area is for Admins only.');
+  }
   router.navigate(['/']);
   return false;
 };

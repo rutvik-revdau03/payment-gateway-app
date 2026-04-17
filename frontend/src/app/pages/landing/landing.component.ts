@@ -34,12 +34,13 @@ export class LandingComponent implements OnInit {
 
   loadProducts() {
     this.loading = true;
-    this.api.getProducts().subscribe({
+    const adminId = this.isAdmin() ? this.getUserId() : undefined;
+    this.api.getProducts(adminId).subscribe({
       next: (res: any) => {
         // Map DB products to include icons and descriptions for the UI
         this.products = res.map((p: any, index: number) => {
           let icon = 'inventory_2';
-          let description = 'High-quality electronics product for your daily needs.';
+          let description = p.description || 'High-quality electronics product for your daily needs.';
           let name = p.name.toLowerCase();
           
           if (name.includes('mobile') || name.includes('phone') || name.includes('iphone')) {

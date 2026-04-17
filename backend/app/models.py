@@ -11,6 +11,7 @@ class Product(Base):
 
     id    = Column(Integer, primary_key=True)   # Auto-increment primary key
     name  = Column(String(100))                  # Product name
+    description = Column(String(255), nullable=True) # Product description
     price = Column(DECIMAL(10, 2))              # Product price in USD
     stock_quantity = Column(Integer, default=0) # Available quantity
     admin_id = Column(Integer, ForeignKey("users.id")) # Admin who added this

@@ -16,31 +16,119 @@
     }
   </section>
 
-  @if (isLoggedIn()) {
-    <section class="products-section">
-      <h2>Trending Collections</h2>
-      
-      <div *ngIf="loading" class="loading-wrap">
-        <mat-spinner diameter="40"></mat-spinner>
-        <p>Curating your experience...</p>
-      </div>
+  <!-- GUEST WELCOME CARD (Only for Guest) -->
+  @if (!isLoggedIn()) {
+    <section class="guest-info-section page-wrapper">
+      <mat-card class="premium-card guest-card" style="animation: slideUp 0.8s ease-out forwards; opacity: 0;">
+        <div class="card-icon-box second pulse-animation">
+          <mat-icon>lock_person</mat-icon>
+        </div>
+        <mat-card-header>
+          <mat-card-title>Unlock Exclusive Collections</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Sign up or login to experience the best of digital commerce. Our curated selection of premium products is waiting for you!</p>
+          <div class="auth-buttons" style="margin-top: 2rem;">
+            <button mat-raised-button color="primary" routerLink="/login" style="padding: 0 3rem;">Get Started</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </section>
+  }
 
-      <div *ngIf="!loading && products.length > 0">
-        <div class="row">
-          <!-- Main Product Loop -->
-          <ng-container *ngFor="let p of products; let i = index">
-            
-            <!-- Standard Card -->
-            <mat-card *ngIf="i !== 3" class="product-card" [style.animation-delay]="(i * 0.1) + 's'" style="animation: slideUp 0.6s ease-out forwards; opacity: 0;">
+  <!-- ALWAYS SHOW PRODUCTS Section -->
+  <section class="products-section">
+    <div class="section-title">
+      <h2>Trending <span class="accent">Collections</span></h2>
+      <p>Explore our premium selection of electronic gadgets and accessories.</p>
+    </div>
+    
+    <div *ngIf="loading" class="loading-wrap">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Curating your experience...</p>
+    </div>
+
+    <div *ngIf="!loading && products.length > 0">
+      <div class="row">
+        <!-- Main Product Loop -->
+        <ng-container *ngFor="let p of products; let i = index">
+          
+          <!-- Standard Card -->
+          <mat-card *ngIf="i !== 3" class="product-card" [style.animation-delay]="(i * 0.1) + 's'" style="animation: slideUp 0.6s ease-out forwards; opacity: 0;">
+            <mat-card-header>
+              <div mat-card-avatar class="product-icon-container">
+                <mat-icon>{{ p.icon }}</mat-icon>
+              </div>
+              <mat-card-title>{{ p.name }}</mat-card-title>
+              <div class="price-tag">${{ p.price }}</div>
+              <div class="stock-badge" [class.out]="p.stock_quantity === 0">
+                {{ p.stock_quantity > 0 ? p.stock_quantity + ' left' : 'Out of Stock' }}
+              </div>
+            </mat-card-header>
+            <mat-card-content>
+              <p>{{ p.description }}</p>
+              <div class="vendor-identity">
+                <mat-icon>verified_user</mat-icon>
+                <span>Owner / Vendor: {{ p.admin_name || 'Global Admin' }}</span>
+              </div>
+            </mat-card-content>
+            <mat-card-actions *ngIf="!isAdmin()">
+              <button mat-button color="primary" (click)="handleAction(p)">
+                Add to Cart
+                <mat-icon iconPositionEnd>shopping_cart</mat-icon>
+              </button>
+            </mat-card-actions>
+          </mat-card>
+
+          <!-- Featured Card (Always at index 3) -->
+          <mat-card *ngIf="i === 3" class="product-card large-card" style="animation: slideUp 0.8s ease-out forwards; opacity: 0;">
+            <div class="large-card-layout">
+              <div class="large-icon-section">
+                 <mat-icon class="huge-icon">{{ p.icon }}</mat-icon>
+              </div>
+              <div class="large-info-section">
+                <mat-card-header>
+                  <mat-card-title>{{ p.name }}</mat-card-title>
+                  <div class="price-tag large-price">${{ p.price }}</div>
+                  <div class="stock-badge featured">{{ p.stock_quantity }} Available</div>
+                </mat-card-header>
+                <mat-card-content>
+                  <p class="long-desc">{{ p.description }}</p>
+                  <div class="vendor-identity">
+                    <mat-icon>verified_user</mat-icon>
+                    <span>Owner / Vendor: {{ p.admin_name || 'Premium Global' }}</span>
+                  </div>
+                  <p class="badge">🔥 Featured Item</p>
+                </mat-card-content>
+                <mat-card-actions *ngIf="!isAdmin()">
+                  <button mat-raised-button color="warn" class="buy-now-btn" (click)="handleAction(p)">
+                    Buy Now - Special Deal
+                  </button>
+                </mat-card-actions>
+              </div>
+            </div>
+          </mat-card>
+
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- More Products -->
+    <div *ngIf="!loading && products.length > 5" class="more-products-wrapper fadeIn" style="margin-top: 6rem;">
+       <div class="section-title">
+          <h2>More products <span class="accent">you like</span></h2>
+          <p>Continue exploring our latest additions to the catalog.</p>
+       </div>
+
+       <div class="row">
+         <ng-container *ngFor="let p of products.slice(5); let i = index">
+            <mat-card class="product-card" [style.animation-delay]="(i * 0.1) + 's'">
               <mat-card-header>
                 <div mat-card-avatar class="product-icon-container">
                   <mat-icon>{{ p.icon }}</mat-icon>
                 </div>
                 <mat-card-title>{{ p.name }}</mat-card-title>
                 <div class="price-tag">${{ p.price }}</div>
-                <div class="stock-badge" [class.out]="p.stock_quantity === 0">
-                  {{ p.stock_quantity > 0 ? p.stock_quantity + ' left' : 'Out of Stock' }}
-                </div>
               </mat-card-header>
               <mat-card-content>
                 <p>{{ p.description }}</p>
@@ -56,93 +144,10 @@
                 </button>
               </mat-card-actions>
             </mat-card>
-
-            <!-- Featured Card (Always at index 3) -->
-            <mat-card *ngIf="i === 3" class="product-card large-card" style="animation: slideUp 0.8s ease-out forwards; opacity: 0;">
-              <div class="large-card-layout">
-                <div class="large-icon-section">
-                   <mat-icon class="huge-icon">{{ p.icon }}</mat-icon>
-                </div>
-                <div class="large-info-section">
-                  <mat-card-header>
-                    <mat-card-title>{{ p.name }}</mat-card-title>
-                    <div class="price-tag large-price">${{ p.price }}</div>
-                    <div class="stock-badge featured">{{ p.stock_quantity }} Available</div>
-                  </mat-card-header>
-                  <mat-card-content>
-                    <p class="long-desc">{{ p.description }}</p>
-                    <div class="vendor-identity">
-                      <mat-icon>verified_user</mat-icon>
-                      <span>Owner / Vendor: {{ p.admin_name || 'Premium Global' }}</span>
-                    </div>
-                    <p class="badge">🔥 Featured Item</p>
-                  </mat-card-content>
-                  <mat-card-actions *ngIf="!isAdmin()">
-                    <button mat-raised-button color="warn" class="buy-now-btn" (click)="handleAction(p)">
-                      Buy Now - Special Deal
-                    </button>
-                  </mat-card-actions>
-                </div>
-              </div>
-            </mat-card>
-
-          </ng-container>
-        </div>
-      </div>
-
-      <!-- New Section: More Products (Requested by user) -->
-      <div *ngIf="!loading && products.length > 5" class="more-products-wrapper fadeIn" style="margin-top: 6rem;">
-         <div class="section-title">
-            <h2>More products <span class="accent">you like</span></h2>
-            <p>Continue exploring our latest additions to the catalog.</p>
-         </div>
-
-         <div class="row">
-           <ng-container *ngFor="let p of products.slice(5); let i = index">
-              <mat-card class="product-card" [style.animation-delay]="(i * 0.1) + 's'">
-                <mat-card-header>
-                  <div mat-card-avatar class="product-icon-container">
-                    <mat-icon>{{ p.icon }}</mat-icon>
-                  </div>
-                  <mat-card-title>{{ p.name }}</mat-card-title>
-                  <div class="price-tag">${{ p.price }}</div>
-                </mat-card-header>
-                <mat-card-content>
-                  <p>{{ p.description }}</p>
-                  <div class="vendor-identity">
-                    <mat-icon>verified_user</mat-icon>
-                    <span>Owner / Vendor: {{ p.admin_name || 'Global Admin' }}</span>
-                  </div>
-                </mat-card-content>
-                <mat-card-actions *ngIf="!isAdmin()">
-                  <button mat-button color="primary" (click)="handleAction(p)">
-                    Add to Cart
-                    <mat-icon iconPositionEnd>shopping_cart</mat-icon>
-                  </button>
-                </mat-card-actions>
-              </mat-card>
-           </ng-container>
-         </div>
-      </div>
-    </section>
-  } @else {
-    <section class="guest-info-section page-wrapper">
-      <mat-card class="premium-card guest-card" style="animation: slideUp 0.8s ease-out forwards; opacity: 0;">
-        <div class="card-icon-box second pulse-animation">
-          <mat-icon>lock_person</mat-icon>
-        </div>
-        <mat-card-header>
-          <mat-card-title>Unlock Exclusive Collections</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>Login to view our curated selection of premium products and seasonal deals. Experience the best of digital commerce today!</p>
-          <div class="auth-buttons" style="margin-top: 2rem;">
-            <button mat-raised-button color="primary" routerLink="/login" style="padding: 0 3rem;">Get Started</button>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </section>
-  }
+         </ng-container>
+       </div>
+    </div>
+  </section>
 
   <section class="ecommerce-info page-wrapper">
     <div class="section-title">

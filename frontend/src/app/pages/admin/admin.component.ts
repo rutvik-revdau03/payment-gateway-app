@@ -37,9 +37,12 @@ export class AdminComponent {
 
   product = {
     name: '',
+    description: '',
     price: 0,
     stock_quantity: 0
   };
+
+  editingProduct: any = null;
 
   loading = false;
   successMessage: string = '';
@@ -100,32 +103,58 @@ export class AdminComponent {
     this.successMessage = '';
     this.errorMessage = '';
 
-    // Typing for the data object
-    const userStr = localStorage.getItem('user');
-    const user = userStr ? JSON.parse(userStr) : { id: 1 }; // Default to 1 if not found
-
-    const data = {
-        name: this.product.name,
-        price: Number(this.product.price),
-        stock_quantity: Number(this.product.stock_quantity),
-        admin_id: user.id
-    };
-
-    // We need to add a postProducts method to ApiService if it doesn't exist
-    // But since I'm creating this on the fly, I'll use a direct call if I can
-    // Or I'll update ApiService first.
-    
-    this.api.addProduct(data).subscribe({
-      next: (res: any) => {
+    try {
+      const adminId = this.getAdminId();
+      if (!adminId) {
+        this.errorMessage = 'Session expired. Please log in again.';
         this.loading = false;
-        this.successMessage = `Successfully added ${res.stock_quantity} units of "${res.name}"!`;
-        this.product = { name: '', price: 0, stock_quantity: 0 };
-        this.loadMyProducts();
-      },
-      error: (err: any) => {
-        this.loading = false;
-        this.errorMessage = err.error?.detail || 'Failed to add product.';
+        return;
       }
+
+      const data = {
+          name: this.product.name,
+          description: this.product.description,
+          price: Number(this.product.price),
+          stock_quantity: Number(this.product.stock_quantity),
+          admin_id: adminId
+      };
+
+      this.api.addProduct(data).subscribe({
+        next: (res: any) => {
+          this.loading = false;
+          this.successMessage = `Successfully added ${res.stock_quantity} units of "${res.name}"!`;
+          this.product = { name: '', description: '', price: 0, stock_quantity: 0 };
+          this.loadMyProducts();
+        },
+        error: (err: any) => {
+          this.loading = false;
+          this.errorMessage = err.error?.detail || 'Failed to add product.';
+        }
+      });
+    } catch (e) {
+      console.error('Submission error:', e);
+      this.loading = false;
+      this.errorMessage = 'An unexpected error occurred.';
+    }
+  }
+
+  editProduct(p: any) {
+    this.editingProduct = { ...p };
+  }
+
+  cancelEdit() {
+    this.editingProduct = null;
+  }
+
+  saveEdit() {
+    if (!this.editingProduct.name || this.editingProduct.price <= 0) {
+      alert('Invalid product details');
+      return;
+    }
+    this.api.updateProduct(this.editingProduct.id, this.editingProduct).subscribe(() => {
+      alert('Product updated successfully!');
+      this.editingProduct = null;
+      this.loadMyProducts();
     });
   }
 
